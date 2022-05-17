@@ -1,0 +1,30 @@
+type Schedules {
+  _id: ID!
+  createdBy: User!
+  service: Service!
+  month: Int!
+  day: Int!
+  hour: Int!
+}
+
+input SchedulesInput {
+  id: ID!
+  createdBy: ID
+  service: ID
+  month: Int
+  day: Int
+  hour: Int
+}
+
+type Query {
+  schedules: [Schedules!]
+  getSchedule(id: ID!): Schedules
+  schedulesByService(id: ID): [Schedules]
+  schedulesByUser(id: ID): [Schedules]
+}
+
+type Mutation {
+  createSchedule(input: SchedulesInput): Schedules
+  updateSchedule(input: SchedulesInput): Schedules
+  deleteSchedule(id: ID): ID
+}

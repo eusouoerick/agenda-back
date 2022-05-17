@@ -1,0 +1,26 @@
+type Service {
+  _id: ID!
+  name: String!
+  description: String
+  price: Float!
+  duration: Float!
+}
+
+input ServiceInput {
+  id: ID
+  name: String
+  description: String
+  price: Float
+  duration: Float
+}
+
+type Query {
+  services: [Service!]!
+  getService(id: ID!): Service!
+}
+
+type Mutation {
+  createService(data: ServiceInput!): Service!
+  updateService(data: ServiceInput!): Service!
+  deleteService(id: ID!): Service!
+}
