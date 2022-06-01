@@ -1,13 +1,14 @@
 require("dotenv").config();
 const mongoose = require("mongoose");
 const JWT = require("jsonwebtoken");
+const bcrypt = require("bcryptjs");
 
 const Schema = new mongoose.Schema({
   adm: { type: Boolean, default: false },
   name: { type: String, required: true },
   password: { type: String, required: true },
-  email: { type: String },
-  phone: { type: String },
+  email: { type: String, unique: true },
+  phone: { type: String, unique: true },
   schedules: [{ type: mongoose.Types.ObjectId, ref: "Schedules" }],
 });
 
@@ -17,7 +18,7 @@ Schema.pre("save", async function () {
 });
 
 Schema.methods.createToken = function () {
-  return JWT.sign({ id: this._id, adm: this.adm }, process.env.SECRET, {
+  return JWT.sign({ id: this._id, adm: this.adm }, process.env.JWT_SECRET, {
     expiresIn: "3d",
   });
 };

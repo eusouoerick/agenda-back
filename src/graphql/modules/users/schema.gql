@@ -1,9 +1,9 @@
 type User {
   _id: ID!
   name: String!
-  email: String!
+  email: String
   password: String!
-  phone: String!
+  phone: String
   schedules: [Schedules!]!
 }
 
@@ -19,6 +19,12 @@ input LoginInput{
   password: String!
 }
 
+input CreateUserInput{
+  name: String!
+  contact: String!
+  password: String!
+}
+
 type Query {
   login(data: LoginInput): String!
   users: [User!]!
@@ -26,7 +32,7 @@ type Query {
 }
 
 type Mutation {
-  createUser(data: UserInput): String!
+  createUser(data: CreateUserInput): String!
   updateUser(id: ID!, data: UserInput): User!
   deleteUser(id: ID!): Boolean!
 }

@@ -4,16 +4,16 @@ type Schedules {
   service: Service!
   month: Int!
   day: Int!
-  hour: Int!
+  hour: Float!
 }
 
 input SchedulesInput {
-  id: ID!
+  id: ID
   createdBy: ID
   service: ID
   month: Int
   day: Int
-  hour: Int
+  hour: Float
 }
 
 type Query {
@@ -24,7 +24,7 @@ type Query {
 }
 
 type Mutation {
-  createSchedule(input: SchedulesInput): Schedules
-  updateSchedule(input: SchedulesInput): Schedules
+  createSchedule(data: SchedulesInput): Schedules
+  updateSchedule(data: SchedulesInput): Schedules
   deleteSchedule(id: ID): ID
 }

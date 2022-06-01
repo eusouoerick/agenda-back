@@ -1,8 +1,9 @@
 require("dotenv").config();
 const express = require("express");
-const { ApolloServer } = require("apollo-server-express");
+const { ApolloServer, ApolloError } = require("apollo-server-express");
 const mongoose = require("mongoose");
 const cors = require("cors");
+const morgan = require("morgan");
 
 const typeDefs = require("./graphql/typedefs");
 const resolvers = require("./graphql/resolvers");
@@ -13,9 +14,25 @@ const start = async (typeDefs, resolvers) => {
   const server = new ApolloServer({
     typeDefs,
     resolvers,
+    context: ({ req }) => ({
+      req,
+      checkField: (field) => {
+        // check if field is email or phone number
+        const emailRegex =
+          /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        const phoneRegex = /^\(?[1-9]{2}\)? ?(?:[2-8]|9[1-9])[0-9]{3}\-?[0-9]{4}$/;
+
+        if (emailRegex.test(field)) return "email";
+        if (phoneRegex.test(field)) return "phone";
+
+        throw new ApolloError("Invalid credentials", "401");
+      },
+    }),
   });
   await server.start();
+
   app.use(cors());
+  app.use(morgan("dev"));
   server.applyMiddleware({ app, path: "/" || "/graphql" });
 
   await mongoose.connect(process.env.MONGO_URI);

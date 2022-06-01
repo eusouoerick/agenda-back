@@ -11,6 +11,7 @@ module.exports = {
   Query: {
     schedules: async () => await Schedules.find(),
     getSchedule: async (_, { id }) => await Schedules.findById(id),
+    // funções de adminstrador
     schedulesByService: async (_, { id }) => await Schedules.find({ service: id }),
     schedulesByUser: async (_, { id }) => await Schedules.find({ createdBy: id }),
   },
