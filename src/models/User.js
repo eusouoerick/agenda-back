@@ -9,6 +9,7 @@ const Schema = new mongoose.Schema({
   password: { type: String, required: true },
   email: { type: String, unique: true },
   phone: { type: String, unique: true },
+  contact: { type: String, options: ["email", "phone"], required: true },
   schedules: [{ type: mongoose.Types.ObjectId, ref: "Schedules" }],
 });
 
@@ -19,7 +20,7 @@ Schema.pre("save", async function () {
 
 Schema.methods.createToken = function () {
   return JWT.sign({ id: this._id, adm: this.adm }, process.env.JWT_SECRET, {
-    expiresIn: "3d",
+    expiresIn: "30d",
   });
 };
 

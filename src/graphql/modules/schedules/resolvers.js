@@ -9,19 +9,21 @@ module.exports = {
     service: async (parent) => await Service.findById(parent.service),
   },
   Query: {
-    schedules: async () => await Schedules.find(),
+    schedules: async (_, { date }) => {
+      return await Schedules.find().sort({ date: -1 });
+    },
     getSchedule: async (_, { id }) => await Schedules.findById(id),
     // funções de adminstrador
     schedulesByService: async (_, { id }) => await Schedules.find({ service: id }),
     schedulesByUser: async (_, { id }) => await Schedules.find({ createdBy: id }),
   },
   Mutation: {
-    createSchedule: async (_, { data }) => {
-      const date = data.month && data.day && data.hour;
-      if (!data.createdBy || !data.service || !date) {
+    createSchedule: async (_, { data }, { req: { user }, checkUser }) => {
+      checkUser(user.id);
+      if (!data.service || !data.date) {
         throw new ApolloError("Please fill all the fields", "400");
       }
-      const schedule = await Schedules.create(data);
+      const schedule = await Schedules.create({...data, createdBy: user.id});
       await User.findByIdAndUpdate(schedule.createdBy, {
         $addToSet: { schedules: schedule._id },
       });

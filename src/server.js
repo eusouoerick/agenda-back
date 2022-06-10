@@ -2,8 +2,10 @@ require("dotenv").config();
 const express = require("express");
 const { ApolloServer, ApolloError } = require("apollo-server-express");
 const mongoose = require("mongoose");
+
 const cors = require("cors");
 const morgan = require("morgan");
+const tokenDecoderMiddleware = require("./middleware/decodedToken");
 
 const typeDefs = require("./graphql/typedefs");
 const resolvers = require("./graphql/resolvers");
@@ -16,6 +18,13 @@ const start = async (typeDefs, resolvers) => {
     resolvers,
     context: ({ req }) => ({
       req,
+      userReq: req.user,
+      checkUser: (checkId) => {
+        if(!req.user) throw new ApolloError("Unauthorized", "401");
+        const { id, adm } = req.user;
+        if (id === checkId || adm) return true;
+        throw new ApolloError("Unauthorized", "401");
+      },
       checkField: (field) => {
         // check if field is email or phone number
         const emailRegex =
@@ -33,6 +42,7 @@ const start = async (typeDefs, resolvers) => {
 
   app.use(cors());
   app.use(morgan("dev"));
+  app.use(tokenDecoderMiddleware);
   server.applyMiddleware({ app, path: "/" || "/graphql" });
 
   await mongoose.connect(process.env.MONGO_URI);

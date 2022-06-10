@@ -1,10 +1,12 @@
 type User {
   _id: ID!
+  adm: Boolean!
   name: String!
   email: String
   password: String!
   phone: String
   schedules: [Schedules!]!
+  contact: String
 }
 
 input UserInput {
@@ -14,12 +16,12 @@ input UserInput {
   password: String
   phone: String
 }
-input LoginInput{
+input LoginInput {
   contact: String!
   password: String!
 }
 
-input CreateUserInput{
+input CreateUserInput {
   name: String!
   contact: String!
   password: String!
@@ -28,7 +30,7 @@ input CreateUserInput{
 type Query {
   login(data: LoginInput): String!
   users: [User!]!
-  getUser(id: ID!): User!
+  getUser(id: ID): User!
 }
 
 type Mutation {

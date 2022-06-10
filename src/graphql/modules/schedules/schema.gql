@@ -11,9 +11,7 @@ input SchedulesInput {
   id: ID
   createdBy: ID
   service: ID
-  month: Int
-  day: Int
-  hour: Float
+  date: String
 }
 
 type Query {
