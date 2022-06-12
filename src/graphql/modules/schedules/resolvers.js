@@ -7,6 +7,7 @@ module.exports = {
   Schedules: {
     createdBy: async (parent) => await User.findById(parent.createdBy),
     service: async (parent) => await Service.findById(parent.service),
+    date: (parent) => new Date(parent.date).toUTCString()
   },
   Query: {
     schedules: async (_, { date }) => {
@@ -23,10 +24,11 @@ module.exports = {
       if (!data.service || !data.date) {
         throw new ApolloError("Please fill all the fields", "400");
       }
-      const schedule = await Schedules.create({...data, createdBy: user.id});
+      const schedule = await Schedules.create({ ...data, createdBy: user.id });
       await User.findByIdAndUpdate(schedule.createdBy, {
         $addToSet: { schedules: schedule._id },
       });
+      return schedule;
     },
     updateSchedule: async (_, { id, data }) => {
       return await Schedules.findByIdAndUpdate(id, data, { new: true });

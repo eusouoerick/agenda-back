@@ -1,7 +1,7 @@
 type Service {
   _id: ID!
   name: String!
-  description: String
+  description: String!
   price: Float!
   duration: Float!
 }
@@ -9,7 +9,6 @@ type Service {
 input ServiceInput {
   id: ID
   name: String
-  description: String
   price: Float
   duration: Float
 }

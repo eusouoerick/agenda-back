@@ -2,27 +2,24 @@ type Schedules {
   _id: ID!
   createdBy: User!
   service: Service!
-  month: Int!
-  day: Int!
-  hour: Float!
+  date: String!
+  status: Boolean!
 }
 
 input SchedulesInput {
-  id: ID
-  createdBy: ID
   service: ID
   date: String
 }
 
 type Query {
-  schedules: [Schedules!]
+  schedules(date: String): [Schedules!]
   getSchedule(id: ID!): Schedules
   schedulesByService(id: ID): [Schedules]
   schedulesByUser(id: ID): [Schedules]
 }
 
 type Mutation {
-  createSchedule(data: SchedulesInput): Schedules
-  updateSchedule(data: SchedulesInput): Schedules
+  createSchedule(data: SchedulesInput): Schedules!
+  updateSchedule(data: SchedulesInput): Schedules!
   deleteSchedule(id: ID): ID
 }
