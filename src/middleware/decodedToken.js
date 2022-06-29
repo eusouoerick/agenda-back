@@ -1,14 +1,15 @@
 require("dotenv").config();
+const User = require("../models/User");
 const JWT = require("jsonwebtoken");
 
-const tokenDecoderMiddleware = (req, res, next) => {
+const tokenDecoderMiddleware = async (req, res, next) => {
   const auth = req.headers.authorization || "";
   try {
     const token = auth.split(" ")[1];
-    const decoded = JWT.verify(token, "secret");
-    req.user = decoded;
+    const { id } = JWT.verify(token, "secret");
+    const { adm } = await User.findById(id);
+    req.user = { id, adm };
   } catch (error) {
-    console.log(error);
     req.user = null;
   }
   return next();

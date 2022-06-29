@@ -2,8 +2,8 @@ type User {
   _id: ID!
   adm: Boolean!
   name: String!
-  email: String
   password: String!
+  email: String
   phone: String
   schedules: [Schedules!]!
   contact: String

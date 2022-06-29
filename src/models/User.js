@@ -7,8 +7,8 @@ const Schema = new mongoose.Schema({
   adm: { type: Boolean, default: false },
   name: { type: String, required: true },
   password: { type: String, required: true },
-  email: { type: String, unique: true },
-  phone: { type: String, unique: true },
+  email: { type: String },
+  phone: { type: String },
   contact: { type: String, options: ["email", "phone"], required: true },
   schedules: [{ type: mongoose.Types.ObjectId, ref: "Schedules" }],
 });
@@ -19,8 +19,8 @@ Schema.pre("save", async function () {
 });
 
 Schema.methods.createToken = function () {
-  return JWT.sign({ id: this._id, adm: this.adm }, process.env.JWT_SECRET, {
-    expiresIn: "30d",
+  return JWT.sign({ id: this._id }, process.env.JWT_SECRET, {
+    expiresIn: "10d",
   });
 };
 
