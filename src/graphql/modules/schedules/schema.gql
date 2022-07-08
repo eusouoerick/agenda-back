@@ -12,7 +12,7 @@ input SchedulesInput {
 }
 
 type Query {
-  schedules(date: String): [Schedules!]
+  schedules(date: String, page: Int, service: ID): [Schedules!]
   getSchedule(id: ID!): Schedules
   schedulesByService(id: ID): [Schedules]
   schedulesByUser(id: ID): [Schedules]
