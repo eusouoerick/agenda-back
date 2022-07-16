@@ -39,12 +39,12 @@ module.exports = {
       list.map((i) => {
         if (date) {
           // remove os "-" e "/" do date
-          const d = new Date(
+          const toDate = new Date(
             date.slice(0, 4),
             date.slice(5, 7) - 1,
             date.slice(8, 10)
           );
-          if (isSameDay(i.date, d)) {
+          if (isSameDay(i.date, toDate)) {
             sameMonth.push(i);
           }
         } else {
@@ -70,11 +70,9 @@ module.exports = {
         ...sameMonth.sort((a, b) => compareAsc(a.date, b.date)),
         ...pendingSchedules.sort((a, b) => compareAsc(a.date, b.date)),
         ...oldSchedules.sort((a, b) => compareDesc(a.date, b.date)),
-      ].slice(skip, (skip || 1) * limit);
+      ].slice(skip).slice(0, limit);
     },
     getSchedule: async (_, { id }) => await Schedules.findById(id),
-    // funções de adminstrador
-    schedulesByService: async (_, { id }) => await Schedules.find({ service: id }),
     schedulesByUser: async (_, { id }) => await Schedules.find({ createdBy: id }),
   },
   Mutation: {
