@@ -10,6 +10,7 @@ input ServiceInput {
   id: ID
   name: String
   price: Float
+  description: String
   duration: Float
 }
 
@@ -21,5 +22,5 @@ type Query {
 type Mutation {
   createService(data: ServiceInput!): Service!
   updateService(data: ServiceInput!): Service!
-  deleteService(id: ID!): Service!
+  deleteService(id: ID!): Boolean!
 }

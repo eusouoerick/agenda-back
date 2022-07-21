@@ -8,7 +8,7 @@ module.exports = {
   },
   Mutation: {
     createService: async (_, { data }) => {
-      if (!data.name || !data.duration || !data.price) {
+      if (!data.name || !data.duration || !data.price || !data.description) {
         throw new ApolloError("Please fill all the fields", "400");
       }
       return await Service.create(data);

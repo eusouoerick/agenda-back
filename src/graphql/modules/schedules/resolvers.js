@@ -27,7 +27,7 @@ module.exports = {
       let oldSchedules = []; // schedules in the past
 
       const opt = {};
-      if (service !== "all") {
+      if (service && service !== "all") {
         opt.service = service;
       }
       if (user.adm) {
@@ -64,13 +64,15 @@ module.exports = {
         }
       });
 
-      const limit = 2;
+      const limit = 5;
       const skip = ((page || 1) - 1) * limit;
       return [
         ...sameMonth.sort((a, b) => compareAsc(a.date, b.date)),
         ...pendingSchedules.sort((a, b) => compareAsc(a.date, b.date)),
         ...oldSchedules.sort((a, b) => compareDesc(a.date, b.date)),
-      ].slice(skip).slice(0, limit);
+      ]
+        .slice(skip)
+        .slice(0, limit);
     },
     getSchedule: async (_, { id }) => await Schedules.findById(id),
     schedulesByUser: async (_, { id }) => await Schedules.find({ createdBy: id }),
