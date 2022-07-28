@@ -23,7 +23,10 @@ module.exports = {
       }
       return user.createToken();
     },
-    users: async () => await User.find(),
+    users: async (_, {}, { req: { user } }) => {
+      if (!user.adm) throw new ApolloError("Unauthorized", "401");
+      return await User.find();
+    },
     getUser: async (_, { id }, { req }) => {
       // se não passar o id do usuário, retorna o usuário logado
       const user = req.user;

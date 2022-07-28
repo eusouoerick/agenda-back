@@ -1,0 +1,6 @@
+type Query {
+  graphUsers: [User]
+  graphSchedules: [Int!]!
+  graphMoney: [Float!]!
+  graphServices: [Int!]!
+}

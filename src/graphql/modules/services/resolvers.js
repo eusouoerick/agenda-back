@@ -7,7 +7,8 @@ module.exports = {
     getService: async (_, { id }) => await Service.findById(id),
   },
   Mutation: {
-    createService: async (_, { data }) => {
+    createService: async (_, { data }, { req: { user } }) => {
+      if(!user.adm) throw new ApolloError("You are not authorized to do this");
       if (!data.name || !data.duration || !data.price || !data.description) {
         throw new ApolloError("Please fill all the fields", "400");
       }
