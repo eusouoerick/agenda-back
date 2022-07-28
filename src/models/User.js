@@ -11,7 +11,7 @@ const Schema = new mongoose.Schema({
   phone: { type: String },
   contact: { type: String, options: ["email", "phone"], required: true },
   schedules: [{ type: mongoose.Types.ObjectId, ref: "Schedules" }],
-});
+}, { timestamps: true });
 
 Schema.pre("save", async function () {
   const salt = await bcrypt.genSalt();

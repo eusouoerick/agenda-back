@@ -16,7 +16,6 @@ const {
 module.exports = {
   Schedules: {
     createdBy: async (parent) => await User.findById(parent.createdBy),
-    service: async (parent) => await Service.findById(parent.service),
     date: (parent) => new Date(parent.date).toUTCString(),
   },
   Query: {
@@ -26,15 +25,16 @@ module.exports = {
       let pendingSchedules = []; // schedules in the future
       let oldSchedules = []; // schedules in the past
 
-      const opt = {};
-      if (service && service !== "all") {
-        opt.service = service;
-      }
       if (user.adm) {
-        list = await Schedules.find(opt);
+        list = await Schedules.find();
       } else {
-        list = await Schedules.find({ createdBy: user.id, ...opt });
+        list = await Schedules.find({ createdBy: user.id });
       }
+
+      if (service && service !== "all") {
+        list = list.filter((item) => item.service._id.toString() === service);
+      }
+
       // organize schedules
       list.map((i) => {
         if (date) {
@@ -88,7 +88,13 @@ module.exports = {
       });
       if (checkDate) throw new ApolloError("This date is already booked", "400");
 
-      const schedule = await Schedules.create({ ...data, createdBy: user.id });
+      const service = await Service.findById(data.service);
+      service.description = undefined;
+      const schedule = await Schedules.create({
+        ...data,
+        createdBy: user.id,
+        service,
+      });
       await User.findByIdAndUpdate(schedule.createdBy, {
         $addToSet: { schedules: schedule._id },
       });
@@ -106,9 +112,6 @@ module.exports = {
       }, timeToCheck);
 
       return schedule;
-    },
-    updateSchedule: async (_, { id, data }) => {
-      return await Schedules.findByIdAndUpdate(id, data, { new: true });
     },
     deleteSchedule: async (_, { id }) => {
       const deleted = !!(await Schedules.findByIdAndDelete(id));
