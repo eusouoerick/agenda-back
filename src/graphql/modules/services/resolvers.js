@@ -14,9 +14,6 @@ module.exports = {
       }
       return await Service.create(data);
     },
-    updateService: async (_, { id, data }) => {
-      return await Service.findByIdAndUpdate(id, data, { new: true });
-    },
     deleteService: async (_, { id }) => !!(await Service.findByIdAndDelete(id)),
   },
 };

@@ -21,6 +21,5 @@ type Query {
 
 type Mutation {
   createService(data: ServiceInput!): Service!
-  updateService(data: ServiceInput!): Service!
   deleteService(id: ID!): Boolean!
 }
