@@ -1,6 +1,11 @@
+type GraphResponse {
+  name: String!
+  count: Float!
+}
+
 type Query {
-  graphUsers: [User]
-  graphSchedules: [Int!]!
-  graphMoney: [Float!]!
-  graphServices: [Int!]!
+  graphUsers: [GraphResponse!]!
+  graphSchedules: [GraphResponse!]!
+  graphMoney: [GraphResponse!]!
+  graphServices: [GraphResponse!]!
 }

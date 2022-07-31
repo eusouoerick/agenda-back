@@ -19,6 +19,9 @@ module.exports = {
     date: (parent) => new Date(parent.date).toUTCString(),
   },
   Query: {
+    getSchedule: async (_, { id }) => await Schedules.findById(id),
+    schedulesByUser: async (_, { id }) => await Schedules.find({ createdBy: id }),
+    // ----------------------------------------------------------------------------
     schedules: async (_, { date, page, service }, { req: { user } }) => {
       let list = []; // will be replaced by the list of schedules
       let sameMonth = []; // schedules pending in the same month
@@ -74,8 +77,6 @@ module.exports = {
         .slice(skip)
         .slice(0, limit);
     },
-    getSchedule: async (_, { id }) => await Schedules.findById(id),
-    schedulesByUser: async (_, { id }) => await Schedules.find({ createdBy: id }),
   },
   Mutation: {
     createSchedule: async (_, { data }, { req: { user }, checkUser }) => {

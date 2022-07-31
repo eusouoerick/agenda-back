@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const Schema = new mongoose.Schema(
   {
     createdBy: { type: mongoose.Types.ObjectId, ref: "Users", required: true },
-    service: { type: Object, ref: "Services", required: true },
+    service: { type: Object, required: true },
     date: { type: Date, required: true },
     status: {
       type: String,
