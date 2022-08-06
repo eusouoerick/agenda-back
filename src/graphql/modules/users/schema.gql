@@ -15,6 +15,7 @@ input UserInput {
   email: String
   password: String
   phone: String
+  contact: String
 }
 input LoginInput {
   contact: String!
@@ -35,6 +36,6 @@ type Query {
 
 type Mutation {
   createUser(data: CreateUserInput): String!
-  updateUser(id: ID!, data: UserInput): User!
+  updateUser(data: UserInput): User!
   deleteUser(id: ID!): Boolean!
 }

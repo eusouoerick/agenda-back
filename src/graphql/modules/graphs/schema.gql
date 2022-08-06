@@ -1,6 +1,6 @@
 type GraphResponse {
   name: String!
-  count: Float!
+  count: Int!
 }
 
 type Query {

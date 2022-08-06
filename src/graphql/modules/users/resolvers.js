@@ -49,8 +49,19 @@ module.exports = {
       };
       return (await User.create(userForm)).createToken();
     },
-    updateUser: async (_, { id, data }, { checkUser }) => {
-      checkUser(id);
+    updateUser: async (_, { data }, { req }) => {
+      const { id } = req.user;
+      if (!id) throw new ApolloError("Unauthorized", "401");
+
+      if (data.contact && !data[data.contact]) {
+        // Se o usuário alterar o contato principal para um que não existe,
+        // vai remover a opção de alterar o contato;
+        const user = await User.findById(id);
+        if (!user[data.contact]) {
+          delete data.contact;
+        }
+      }
+
       return await User.findByIdAndUpdate(id, data, { new: true });
     },
     deleteUser: async (_, { id }, { checkUser }) => {
