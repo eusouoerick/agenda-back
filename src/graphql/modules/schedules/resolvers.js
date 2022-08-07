@@ -116,15 +116,16 @@ module.exports = {
     },
     updateStatusSchedule: async (_, { id, data }, { req: { user } }) => {
       if (!user.adm) throw new ApolloError("You don't have permission", "400");
+
       const status = ["pending", "completed", "cancelled"];
-      if (!status.includes(data) || !data)
+      if (!status.includes(data) || !data) {
         throw new ApolloError("Invalid status", "400");
-      const schedule = await Schedules.findOneAndUpdate(
+      }
+      return await Schedules.findOneAndUpdate(
         { _id: id, createdBy: user.id },
         { status: data },
         { new: true }
       );
-      return schedule.status === data;
     },
     deleteSchedule: async (_, { id }) => {
       const deleted = !!(await Schedules.findByIdAndDelete(id));

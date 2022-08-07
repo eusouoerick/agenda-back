@@ -20,6 +20,6 @@ type Query {
 
 type Mutation {
   createSchedule(data: SchedulesInput): Schedules!
-  updateStatusSchedule(id: ID!, data: String): Boolean!
+  updateStatusSchedule(id: ID!, data: String): Schedules!
   deleteSchedule(id: ID): Boolean!
 }
