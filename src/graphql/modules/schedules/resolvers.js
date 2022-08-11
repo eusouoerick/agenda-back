@@ -11,6 +11,7 @@ const {
   compareAsc,
   compareDesc,
   isSameDay,
+  isSameHour,
 } = require("date-fns");
 
 module.exports = {
@@ -67,7 +68,7 @@ module.exports = {
         }
       });
 
-      const limit = 5;
+      const limit = 10;
       const skip = ((page || 1) - 1) * limit;
       return [
         ...sameMonth.sort((a, b) => compareAsc(a.date, b.date)),
@@ -84,10 +85,20 @@ module.exports = {
       if (!data.service || !data.date) {
         throw new ApolloError("Please fill all the fields", "400");
       }
-      const checkDate = await Schedules.findOne({
-        date: new Date(data.date).toUTCString(),
+
+      const date = new Date(data.date);
+      const year = date.getFullYear();
+      const month = date.getMonth();
+      const day = date.getDate();
+      const checkDate = await Schedules.find({
+        date: {
+          $gte: new Date(year, month, day).toUTCString(),
+          $lte: new Date(year, month, day + 1).toUTCString(),
+        },
       });
-      if (checkDate) throw new ApolloError("This date is already booked", "400");
+
+      const a = checkDate.filter((item) => isSameHour(item.date, date));
+      if (!!a[0]) throw new ApolloError("This date is already booked", "400");
 
       const service = await Service.findById(data.service);
       service.description = undefined;
@@ -115,7 +126,7 @@ module.exports = {
       return schedule;
     },
     updateStatusSchedule: async (_, { id, data }, { req: { user } }) => {
-      if (!user.adm) throw new ApolloError("You don't have permission", "400");
+      if (!user.adm) throw new ApolloError("You don't have permission", "401");
 
       const status = ["pending", "completed", "cancelled"];
       if (!status.includes(data) || !data) {
