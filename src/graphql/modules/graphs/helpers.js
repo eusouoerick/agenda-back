@@ -34,7 +34,7 @@ const datesObj = () => {
   const { day, month, year } = getDates();
   const obj = {};
 
-  for (let i = 0; i <= 7; i++) {
+  for (let i = 1; i <= 7; i++) {
     const dat = format(new Date(year, month, day - i), "dd/MM");
     obj[dat] = 0;
   }
@@ -50,7 +50,7 @@ const lastSevenDays = () => {
   const { day, month, year } = getDates();
   return {
     $gte: new Date(year, month, day - 7),
-    $lte: new Date(year, month, day),
+    $lte: new Date(year, month, day - 1),
   };
 };
 

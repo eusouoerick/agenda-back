@@ -25,7 +25,7 @@ module.exports = {
     },
     users: async (_, {}, { req: { user } }) => {
       if (!user.adm) throw new ApolloError("Unauthorized", "401");
-      return await User.find();
+      return await User.find().sort({ createdAt: -1 });
     },
     getUser: async (_, { id }, { req }) => {
       // se não passar o id do usuário, retorna o usuário logado

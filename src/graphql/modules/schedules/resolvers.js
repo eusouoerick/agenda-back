@@ -23,16 +23,17 @@ module.exports = {
     getSchedule: async (_, { id }) => await Schedules.findById(id),
     schedulesByUser: async (_, { id }) => await Schedules.find({ createdBy: id }),
     // ----------------------------------------------------------------------------
-    schedules: async (_, { date, page, service }, { req: { user } }) => {
+    schedules: async (_, { date, page, service, status }, { req: { user } }) => {
       let list = []; // will be replaced by the list of schedules
       let sameMonth = []; // schedules pending in the same month
       let pendingSchedules = []; // schedules in the future
       let oldSchedules = []; // schedules in the past
 
+      const opt = { status: { $in: status } };
       if (user.adm) {
-        list = await Schedules.find();
+        list = await Schedules.find(opt);
       } else {
-        list = await Schedules.find({ createdBy: user.id });
+        list = await Schedules.find({ createdBy: user.id, ...opt });
       }
 
       if (service && service !== "all") {

@@ -41,7 +41,6 @@ const start = async (typeDefs, resolvers) => {
   });
   await server.start();
 
-  app.use(cors());
   app.use(morgan("dev"));
   app.use(tokenDecoderMiddleware);
   server.applyMiddleware({ app, path: "/" || "/graphql" });

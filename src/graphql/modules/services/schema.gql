@@ -6,6 +6,11 @@ type Service {
   duration: Float!
 }
 
+type ServiceScheduleFilter {
+  _id: ID!
+  name: String!
+}
+
 input ServiceInput {
   id: ID
   name: String
@@ -17,6 +22,7 @@ input ServiceInput {
 type Query {
   services: [Service!]!
   getService(id: ID!): Service!
+  servicesBySchedules: [ServiceScheduleFilter!]!
 }
 
 type Mutation {

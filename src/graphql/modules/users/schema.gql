@@ -28,6 +28,7 @@ input CreateUserInput {
   password: String!
 }
 
+
 type Query {
   login(data: LoginInput): String!
   users: [User!]!
