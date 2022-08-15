@@ -1,3 +1,5 @@
+const { ApolloError } = require("apollo-server-express");
+
 const context = ({ req }) => ({
   req,
   userReq: req.user,
@@ -20,5 +22,4 @@ const context = ({ req }) => ({
   },
 });
 
-
-module.exports = context
+module.exports = context;
