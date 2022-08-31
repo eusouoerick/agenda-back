@@ -1,7 +1,7 @@
-const { ApolloError } = require("apollo-server-express");
-const User = require("../../../models/User");
-const Service = require("../../../models/Service");
-const Schedules = require("../../../models/Schedules");
+const { ApolloError } = require('apollo-server-express');
+const User = require('../../../models/User');
+const Service = require('../../../models/Service');
+const Schedules = require('../../../models/Schedules');
 const {
   isSameMonth,
   isSameYear,
@@ -12,7 +12,7 @@ const {
   compareDesc,
   isSameDay,
   isSameHour,
-} = require("date-fns");
+} = require('date-fns');
 
 module.exports = {
   Schedules: {
@@ -36,7 +36,7 @@ module.exports = {
         list = await Schedules.find({ createdBy: user.id, ...opt });
       }
 
-      if (service && service !== "all") {
+      if (service && service !== 'all') {
         list = list.filter((item) => item.service._id.toString() === service);
       }
 
@@ -84,7 +84,7 @@ module.exports = {
     createSchedule: async (_, { data }, { req: { user }, checkUser }) => {
       checkUser(user.id);
       if (!data.service || !data.date) {
-        throw new ApolloError("Please fill all the fields", "400");
+        throw new ApolloError('Please fill all the fields', '400');
       }
 
       const date = new Date(data.date);
@@ -99,7 +99,7 @@ module.exports = {
       });
 
       const a = checkDate.filter((item) => isSameHour(item.date, date));
-      if (!!a[0]) throw new ApolloError("This date is already booked", "400");
+      if (!!a[0]) throw new ApolloError('This date is already booked', '400');
 
       const service = await Service.findById(data.service);
       service.description = undefined;
@@ -117,9 +117,9 @@ module.exports = {
       const timeToCheck = Math.abs(new Date() - new Date(schedule.date)) + 7200000;
       setTimeout(async () => {
         const scheduleToChange = await Schedules.findById(schedule._id);
-        if (scheduleToChange.status === "pending") {
+        if (scheduleToChange.status === 'pending') {
           await Schedules.findByIdAndUpdate(scheduleToChange._id, {
-            status: "cancelled",
+            status: 'cancelled',
           });
         }
       }, timeToCheck);
@@ -127,14 +127,14 @@ module.exports = {
       return schedule;
     },
     updateStatusSchedule: async (_, { id, data }, { req: { user } }) => {
-      if (!user.adm) throw new ApolloError("You don't have permission", "401");
+      if (!user.adm) throw new ApolloError("You don't have permission", '401');
 
-      const status = ["pending", "completed", "cancelled"];
+      const status = ['pending', 'completed', 'cancelled'];
       if (!status.includes(data) || !data) {
-        throw new ApolloError("Invalid status", "400");
+        throw new ApolloError('Invalid status', '400');
       }
       return await Schedules.findOneAndUpdate(
-        { _id: id, createdBy: user.id },
+        { _id: id },
         { status: data },
         { new: true }
       );
